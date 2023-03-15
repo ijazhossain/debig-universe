@@ -15,7 +15,7 @@ function generateTag(arr, interval) {
   setInterval(() => {
     const randomIndex = Math.floor(Math.random() * arr.length);
     const randomTagLine = tagLines[randomIndex];
-    document.getElementById("taglines").innerText = randomTagLine;
+    document.getElementById("tagline").innerText = randomTagLine;
   }, interval);
 }
 
@@ -24,32 +24,37 @@ generateTag(tagLines, 2000);
 document
   .getElementById("random-room-btn")
   .addEventListener("click", async function () {
-    console.log("hello world");
+    // console.log("hello world");
     const data = await fetch(`ROOMS.json`);
     const result = await data.json();
+    console.log(result);
     const randomIndex = Math.floor(Math.random() * 10);
     const modalBody = document.getElementById("random-room-info-modal-body");
-    const { name, summary, property_type, images, review_scores } = result[9];
-    
-    
+    const { name, summary, property_type, images, review_scores } = result[randomIndex];
+
+
 
     const reviews = document.createElement("ol");
+    console.log(review_scores.scores);
+    // console.log(review_scores.scores['review_scores_accuracy']);
     if (review_scores.scores) {
-      reviews.setAttribute('class',"list-group")
+      reviews.setAttribute('class', "list-group")
 
-      object.keys(review_scores.scores).forEach((key) => {
+      Object.keys(review_scores.scores).forEach((key) => {
+        console.log(key);
         reviews.innerHTML += `
         <li class="list-group-item list-group-item-info d-flex justify-content-between align-items-center">
         ${key} : 
         <span class="badge bg-primary rounded-pill">${review_scores.scores[key]}</span> 
         </li>
         `;
+
       });
     } else {
       reviews.innerHTML = "No reviews found";
     }
 
-    
+
     modalBody.innerHTML = `
     <div class="col">
     <div class="card h-100">
@@ -61,7 +66,9 @@ document
         <p class="card-text">${summary}</p>
         <div id='review-score'>
       Review Scores :
-      ${review_scores.scores.review_scores_accuracy}
+      <div id="review-section-div">
+      
+      </div>
     </div>
       </div>
       <button class="btn btn-info btn-lg"  role="button"
@@ -69,9 +76,8 @@ document
     </div>
    </div>
     `;
-    
+    document.getElementById('review-section-div').appendChild(reviews);
   });
 
 
 
- 
